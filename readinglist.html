@@ -1,0 +1,58 @@
+<b>2024-07-25</b>  SpeechBERTScore: Reference-Aware Automatic Evaluation of Speech Generation Leveraging NLP Evaluation Metrics (<a href=https://arxiv.org/abs/2401.16812>to appear</a> in Interspeech 2024) <p>
+
+More great work from the authors of SpeechLMScore.  The basic idea is that you have reference speech for all of your test utterances and you get embeddings from some layer of some <i>non-finetuned</i> 
+  SSL model and compute cosine similarity. (They also present some BLEU and token distance type metrics on discrete speech tokens.)  The reference samples do not have to be duration-matched 
+  as in traditional reference-based approaches -- this is a realistic case since you typically will have reference samples for your TTS test set.  Unusually, this is <i>not reference-free</i>, 
+  but it is <i>unsupervised</i> (MOS-labeled training data is not necessary).  They do experiments on SOMOS, BC2019 Mandarin, and NISQA noisy speech.  They compare to traditional 
+  reference-based signal processing metrics (MCD etc.), UTMOS (without domain finetuning), and SpeechLMScore.  Their approach outperforms the other ones in terms of SRCC.  They do an 
+  interesting layerwise analysis of which layer you should extract SSL features from to get the cosine similarities (anything after layer 7 is fine as long as you're not using HuBERT), 
+  and they compare different SSL base models as well (wavlm-large worked best) as well as Chinese-pretrained SSLs and multilingual ones (XLSR) for the BC2019 experiments (XLSR-128 gave the 
+  best system-level SRCCs, but cross-language results using English-trained SSLs were also not bad.)  The authors have open-sourced their code and I am looking forward to trying it out.<p><p>
+
+    
+<b>2024-07-17</b>  RedPen: Region- and Reason-Annotated Dataset of Unnatural Speech (Kyumin Park, Keon Lee, Daeyoung Kim, Dongyeop Kang; <a href=https://arxiv.org/abs/2210.14406>arXiv</a>) <p>
+
+Thanks very much to Wen-Chin Huang for bringing this one to my attention.  This paper does something similar to what [25] and [37] have done -- collect more fine-grained and categorical annotations 
+  of problem regions in synthesized audio -- specifically, using samples from the Voice Conversion Challenge 2018.  The authors say that they will release the data upon acceptance of the paper, 
+  but it appears unfortunately that the paper is on arXiv only and the data has not been shared.  Unlike prior work which reports poor listener agreement for this kind of detailed annotation, the 
+  authors report agreement of about 0.7 which doesn't seem bad (although I couldn't understand from the information given in the paper how many different listeners annotated each sample).  They also 
+  annotate "reasons" for each region that the crowdworkers marked as bad -- these reasons were chosen and annotated by the authors themselves, as experts, and more than one reason can be chosen at a time.  
+  They use a model interpretation method called Integrated Gradient on SSL-MOS to obtain "salient regions" of audio samples that are used to determine the final predicted MOS output and demonstrate 
+  that the salient regions obtained in this way do not in fact correspond to the listener-annotated regions.  Finally, they conduct a crowdsourced test to find out what kinds of information listeners 
+  find the most useful from choices of showing a single MOS value only, score & region, or score&region&reason, finding that listeners prefer score&region the most (although it does not seem like 
+  they specifically recruited speech synthesis experts for this survey, even though that's the demographic most likely to be using this). <p>
+
+I'm not sure whether the fine-grained annotations in this dataset will capture "whole utterance level" forms of badness like buzzy vocoder or robotic intonation.  Nor will TTS-specific artifacts like 
+    unit selection join glitches be present in this voice-conversion-only data.  Nevertheless, this dataset sounds amazing, I would definitely try using it, and I hope the authors are able to publish 
+    and share it eventually.<p><p>
+
+      
+<b>2024-07-10</b>  Selecting N-Lowest Scores for Training MOS Prediction Models (Yuto Kondo, Hirokazu Kameoka, Kou Tanaka, Takuhiro Kaneko; <a href=https://ieeexplore.ieee.org/document/10447722>ICASSP 2024</a>)<p>
+
+Thanks to Prof. Yamagishi for bringing my attention to this paper.  The idea and motivation of this paper is extremely simple: lazy raters who aren't paying too much attention will choose high scores, 
+  and raters that are more careful will catch more small artifacts and other forms of unnaturalness and give lower scores.  Therefore, we can simply discard some fixed number of top scores for every 
+  utterance (keeping only the N-lowest ratings), and we will retain ratings from careful raters and discard the lazy ratings, thereby learning more meaningful distinctions when we train a MOS predictor.  
+  "Good" samples will still have a high score when you throw away a few of the top ratings, and "bad" samples and the distinctions between them will emerge more clearly.  This is a related but different 
+  idea to using listener ID -- listener ID is not taken into account here at all, and listeners may be "inconsistently" lazy or careful across the duration of the test so we always just throw away some 
+  number of the top scores (indeed, they do some analysis and find that the lowest scores are <i>not</i> dependent on a small number of the listeners).  The authors conduct some experiments training 
+  MOSNet on BVCC and VCC2018 datasets using several choices of N, as well as trying N-highest, N-lowest, and N-central.  They find that 3-lowest was best for VCC2018, whereas the best N for BVCC was 
+  inconclusive.  I would have liked to have seen more experiments with more recent MOS predictors, as well as some zero-shot cross-domain experiments on unseen datasets.<p>
+
+This paper made me wonder whether the number of statistically-significant differences between systems changes as you select only the N-lowest scores per utterance and change N.  I quickly tried this with BVCC 
+    -- unsurprisingly, as you decrease the number of data points for each system by decreasing N, the number of statistically-significant differences between systems also decreases.<p><p>
+
+      
+<b>2024-07-05</b>  SpeechAlign: Aligning Speech Generation to Human Preferences (Dong Zhang, Zhaowei Li, Shimin Li, Xin Zhang, Pengyu Wang, Yaqian Zhou Xipeng Qiu; <a href=https://arxiv.org/abs/2404.05600>arXiv</a>)<p>
+
+The title and described motivation for this work are a little misleading in my opinion -- they are not aligning speech generation to human preferences more than usual -- rather, they are 
+  optimizing the training of a speech generation model towards natural speech, which is what we always do, one way or another.  From the title, I thought 
+  this paper would be more about human preferences, but the only actual preference result they present is that humans prefer natural speech to synthesized (which is not new or surprising at all).  What's 
+  interesting about this paper (and not immediately clear from the title) is that they are <i>formulating</i> speech synthesis training as a preference optimization problem, using techniques borrowed from 
+  reinforcement learning.  I would have liked to have seen more comparisons with simpler / more standard formulations, but it's an interesting idea that I don't think I've seen before.<p><p>
+
+
+<b>2024-07-03</b>  A perceptual investigation of wavelet-based decomposition of f0 for text-to-speech synthesis (Manuel Sam Ribiero, Junichi Yamagishi, Robert A. J. Clark; <a href=https://www.isca-archive.org/interspeech_2015/ribeiro15b_interspeech.html>Interspeech 2015</a>)<p>
+
+Thanks to Gustav Eje Henter for pointing out that this paper is probably the first one to compare MUSHRA and MOS for evaluating synthetic speech.  In this paper the authors are using the continuous wavelet 
+  transform to do expressive f0 modeling for TTS.  What makes this paper relevant to this list is that they conducted both MOS and MUSHRA tests on the same data.  Basically, with the MUSHRA test, they found 
+  more significant differences between systems, using fewer listeners (10 listeners rating all stimuli in the MUSHRA test vs. 25 participants in the MOS test with 5 ratings per utterance).
