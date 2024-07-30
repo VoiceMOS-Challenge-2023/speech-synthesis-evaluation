@@ -1,6 +1,6 @@
 <b>2024-07-30</b>  VoxSim: A perceptual voice similarity dataset (Junseok Ahn, Youkyum Kim, Yeunju Choi, Doyeop Kwak, Ji-Hoon Kim, Seongkyu Mun, Joon Son Chung; <a href=https://arxiv.org/abs/2407.18505>to appear</a> in Interspeech 2024)<p>
 
-The authors have created a dataset of speaker similarity ratings of natural speech utterances obtained from VoxCeleb.  There are samples from 1251 different speakers, and almost 70k ratings in total.
+Thanks to Wen-Chin Huang for sharing this paper with me.  The authors have created a dataset of speaker similarity ratings of natural speech utterances obtained from VoxCeleb.  There are samples from 1251 different speakers, and almost 70k ratings in total.
   This is a really nice and large-scale public dataset that as far as I know is the first of its kind.
   I would like to have seen more numbers like number of <i>speaker</i> pairs evaluated, listener agreement, etc. but since the data is public, I can just check these myself.
   This data being public is a really valuable contribution.
@@ -9,13 +9,13 @@ The authors have created a dataset of speaker similarity ratings of natural spee
   The journal paper does a similar listening test, comparing samples from 153 speakers.  There are fewer speakers but more ratings per sample pair.
   They did report listener agreement, which was low no matter how it was measured.  
   The raw data from the journal paper has not been released.
-  Their target wasn't evaluation but synthesis (which is why I did not cite this one in my own journal paper) but the listening test was similar.<p><br>
+  Their target wasn't evaluation but synthesis (which is why I did not cite this one in my own journal paper) but the listening test was similar.<p>
 
     In the VoxSim paper, I didn't understand what the authors meant by "finetuning on individual scores" -- presumably this is just what it sounds like?
     But it sounds like as long as some listener ID / listener modeling was not used, it would just destabilize the training.
-    In any case, this didn't work as well as using the average scores but that's not unexpected.<p><br>
+    In any case, this didn't work as well as using the average scores but that's not unexpected.<p>
 
-  Our journal paper's reference [115] looked at correlations of objective metrics with speaker similarity ratings, too.  This was some analysis of the VCC2020 results -- cosine distance using Kaldi x-vectors had an 0.85 Pearson correlation with listener ratings of speaker similarity, and using EER correlated even better (0.89) -- I am not sure why cosine distance became a preferred metric over EER.  
+  Our own journal paper's <a href=https://www.isca-archive.org/vccbc_2020/das20_vccbc.html>reference [115]</a> looked at correlations of objective metrics with speaker similarity ratings, too.  This was some analysis of the VCC2020 results -- cosine distance using Kaldi x-vectors had an 0.85 Pearson correlation with listener ratings of speaker similarity, and using EER correlated even better (0.89) -- I am not sure why cosine distance became a preferred metric over EER.  
       Are these rather different results because x-vectors are better suited than ECAPA embeddings?  Or is the VCC2020 data just that different from both the VoxSim data and VCC2018?  I am not sure, but these are all public datasets and open-source toolkits so someone can try it out and see.<p><p><br>
   
 <b>2024-07-25</b>  SpeechBERTScore: Reference-Aware Automatic Evaluation of Speech Generation Leveraging NLP Evaluation Metrics (Takaaki Saeki, Soumi Maiti, Shinnosuke Takamichi, Shinji Watanabe, Hiroshi Saruwatari; <a href=https://arxiv.org/abs/2401.16812>to appear</a> in Interspeech 2024) <p>
